@@ -69,11 +69,11 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-[#F6F8D5] p-3 rounded-lg">
                   <div className="text-sm text-gray-500">Outstanding</div>
-                  <div className="font-bold text-[#205781] text-xl">$12,540</div>
+                  <div className="font-bold text-[#205781] text-xl">Ksh12,540</div>
                 </div>
                 <div className="bg-[#98D2C0] p-3 rounded-lg">
                   <div className="text-sm text-gray-700">Paid</div>
-                  <div className="font-bold text-[#205781] text-xl">$28,390</div>
+                  <div className="font-bold text-[#205781] text-xl">Ksh28,390</div>
                 </div>
               </div>
               
@@ -82,21 +82,21 @@ export default function Home() {
                 <div className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50 transition duration-200">
                   <div>
                     <div className="font-medium">ABC Company</div>
-                    <div className="text-sm text-gray-500">#INV-001 · $3,200</div>
+                    <div className="text-sm text-gray-500">#INV-001 · Ksh3,200</div>
                   </div>
                   <div className="bg-[#98D2C0] text-[#205781] px-3 py-1 rounded-full text-sm font-medium">PAID</div>
                 </div>
                 <div className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50 transition duration-200">
                   <div>
                     <div className="font-medium">XYZ Ltd</div>
-                    <div className="text-sm text-gray-500">#INV-002 · $4,800</div>
+                    <div className="text-sm text-gray-500">#INV-002 · Ksh4,800</div>
                   </div>
                   <div className="bg-[#F6F8D5] text-[#4F959D] px-3 py-1 rounded-full text-sm font-medium">PENDING</div>
                 </div>
                 <div className="border rounded-lg p-3 flex justify-between items-center hover:bg-gray-50 transition duration-200">
                   <div>
                     <div className="font-medium">Tech Inc</div>
-                    <div className="text-sm text-gray-500">#INV-003 · $2,400</div>
+                    <div className="text-sm text-gray-500">#INV-003 · Ksh2,400</div>
                   </div>
                   <div className="bg-red-100 text-red-800 px-3 py-1 rounded-full text-sm font-medium">OVERDUE</div>
                 </div>
