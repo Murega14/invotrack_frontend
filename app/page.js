@@ -1,4 +1,5 @@
 import Head from 'next/head';
+import Link from 'next/link';
 import { FaFileInvoiceDollar, FaUserFriends, FaChartLine, FaMobileAlt, FaFilePdf, FaGoogle, FaBell, FaDownload } from 'react-icons/fa';
 
 export default function Home() {
@@ -8,6 +9,7 @@ export default function Home() {
         <title>Invotrack | Invoice Management System</title>
         <meta name="description" content="Simple invoice management system built with Flask and SQLAlchemy" />
         <link rel="icon" href="/favicon.ico" />
+        
       </Head>
 
       {/* Navigation */}
@@ -23,9 +25,9 @@ export default function Home() {
             <a href="#contact" className="font-medium text-gray-700 hover:text-[#4F959D] transition">Contact</a>
           </div>
           <div>
-            <button className="bg-[#205781] hover:bg-[#4F959D] text-white font-medium py-2 px-6 rounded-full transition duration-300">
+            <Link href="/auth" className="bg-[#205781] hover:bg-[#4F959D] text-white font-medium py-2 px-6 rounded-full transition duration-300">
               Login
-            </button>
+            </Link>
           </div>
         </div>
       </nav>
@@ -43,9 +45,9 @@ export default function Home() {
               Invotrack helps you create, track, and manage invoices with ease. Get paid faster with automated payment processing and never miss a payment deadline again.
             </p>
             <div className="flex space-x-4">
-              <button className="bg-white hover:bg-[#F6F8D5] text-[#205781] font-medium py-3 px-8 rounded-full transition duration-300 flex items-center shadow-lg">
+              <Link href="/auth" className="bg-white hover:bg-[#F6F8D5] text-[#205781] font-medium py-3 px-8 rounded-full transition duration-300 flex items-center shadow-lg">
                 <FaGoogle className="mr-2" /> Sign Up with Google
-              </button>
+              </Link>
               <button className="bg-transparent hover:bg-[#4F959D] text-white font-medium py-3 px-8 rounded-full transition duration-300 border-2 border-white">
                 Learn More
               </button>
@@ -188,9 +190,9 @@ export default function Home() {
           <p className="text-white text-lg mb-8 max-w-2xl mx-auto opacity-90">
             Join thousands of businesses using Invotrack to manage their invoices and get paid faster.
           </p>
-          <button className="bg-white hover:bg-[#F6F8D5] text-[#205781] font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg text-lg">
+          <Link href="/auth" className="inline-block bg-white hover:bg-[#F6F8D5] text-[#205781] font-bold py-3 px-8 rounded-full transition duration-300 shadow-lg text-lg">
             Get Started for Free
-          </button>
+          </Link>
         </div>
       </div>
 
