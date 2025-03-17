@@ -14,7 +14,7 @@ const Dashboard = () => {
       {/* Navigation sidebar */}
       <div className="fixed inset-y-0 left-0 w-64 bg-gradient-to-b from-[#205781] to-[#4F959D] text-white">
         <div className="p-6">
-          <h1 className="text-2xl font-bold">InvoiceManager</h1>
+          <h1 className="text-2xl font-bold">INVOTRACK</h1>
         </div>
         <nav className="mt-6">
           <div className="bg-black bg-opacity-10 px-4 py-3 text-white border-l-4 border-[#F6F8D5] font-medium">
