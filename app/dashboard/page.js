@@ -36,7 +36,7 @@ const Dashboard = () => {
             </a>
           </div>
           <div className="px-4 py-3 text-white hover:bg-black hover:bg-opacity-10 transition duration-150">
-            <a href="/businesses" className="flex items-center space-x-3">
+            <a href="/business" className="flex items-center space-x-3">
               <Building2 size={20} />
               <span>Businesses</span>
             </a>

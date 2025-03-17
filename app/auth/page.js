@@ -71,12 +71,20 @@ export default function Auth() {
             password: formData.password,
           };
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
+      // Use GET for login, POST for signup
+      const method = authMode === 'login' ? 'GET' : 'POST';
+      
+      // For GET requests, convert payload to query parameters
+      const url = method === 'GET' 
+        ? `${endpoint}?${new URLSearchParams(payload)}`
+        : endpoint;
+
+      const response = await fetch(url, {
+        method,
         headers: {
-          'Content-Type': 'application/json',
+          'Content-Type': 'application/json'
         },
-        body: JSON.stringify(payload),
+        ...(method === 'POST' && { body: JSON.stringify(payload) }),
         credentials: 'include'
       });
 
@@ -102,38 +110,14 @@ export default function Auth() {
     }
   };
 
-  const handleGoogleSignup = async () => {
+  const handleGoogleSignup = () => {
     try {
       setLoading(true);
-      
-      // For redirect flow
-      if (window.location.href.includes('localhost') || window.location.href.includes('127.0.0.1')) {
-        // For development environment, use JSON response with URL
-        const response = await fetch(`${API_BASE_URL}/api/v1/user/google_signup`, {
-          method: 'POST', // Use POST to get the authorization URL as JSON
-          credentials: 'include'
-        });
-
-        const data = await response.json();
-        console.log(data);
-
-        if (!response.ok) {
-          throw new Error(data.error || 'Failed to initiate Google signup');
-        }
-
-        if (data.authorization_url) {
-          window.location.href = data.authorization_url;
-        } else {
-          throw new Error('Invalid response from server');
-        }
-      } else {
-        // For production, use direct redirect
-        window.location.href = `${API_BASE_URL}/api/v1/user/google_signup`;
-      }
+      // Simple redirect to the backend's Google signup endpoint
+      window.location.href = `${API_BASE_URL}/api/v1/user/google_signup`;
     } catch (error) {
       setError('Failed to initiate Google signup');
-      console.error('Google signup error', error);
-    } finally {
+      console.error('Google signup error:', error);
       setLoading(false);
     }
   };
@@ -307,14 +291,14 @@ export default function Auth() {
 
                 <div className="flex items-center justify-center my-2">
                   <div className="border-t border-gray-300 flex-grow"></div>
-                  <span className="mx-4 text-gray-500 text-sm">OR</span>
+                  <span className="mx-4 text-gray-500 text-sm opacity-0">OR</span>
                   <div className="border-t border-gray-300 flex-grow"></div>
                 </div>
 
                 <button
                   type="button"
                   onClick={handleGoogleSignup}
-                  className="w-full flex items-center justify-center bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
+                  className="w-full flex items-center justify-center opacity-0 bg-white border border-gray-300 rounded-lg shadow-sm px-4 py-2 text-sm font-medium text-gray-800 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-500 transition duration-300"
                 >
                   <svg
                     className="h-5 w-5 mr-2"
