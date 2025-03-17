@@ -2,40 +2,41 @@ import React from 'react';
 
 const AnimatedText = () => {
   return (
-    <div className="absolute top-0 left-0 w-full flex justify-center mt-8">
+    <div className="w-full flex justify-center mb-8">
       <svg
-        className="w-96 h-48" // Increased width and height
-        viewBox="0 0 800 200" // Adjusted viewBox to accommodate larger text
+        className="w-[400px] h-[100px]"
+        viewBox="0 0 800 200"
         xmlns="http://www.w3.org/2000/svg"
       >
+        <defs>
+          <linearGradient id="textGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor="#205781" />
+            <stop offset="100%" stopColor="#4F959D" />
+          </linearGradient>
+        </defs>
         <text
           x="50%"
-          y="40%" // Adjusted y position for larger text
+          y="50%"
           textAnchor="middle"
           dominantBaseline="middle"
-          className="text-6xl font-calligraphy fill-current text-[#205781]" // Increased font size
+          className="text-6xl font-bold animate-pulse-text"
           style={{
-            stroke: "#205781",
-            strokeWidth: 2,
-            strokeDasharray: 1000,
-            strokeDashoffset: 1000,
-            animation: "draw 5s forwards",
+            fill: "url(#textGradient)",
+            filter: "drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.3))"
           }}
         >
           Invotrack
         </text>
         <text
           x="50%"
-          y="70%" // Adjusted y position for larger text
+          y="80%"
           textAnchor="middle"
           dominantBaseline="middle"
-          className="text-4xl font-calligraphy fill-current text-[#4F959D]" // Increased font size
+          className="text-4xl font-semibold animate-slide-in"
           style={{
-            stroke: "#4F959D",
-            strokeWidth: 2,
-            strokeDasharray: 1000,
-            strokeDashoffset: 1000,
-            animation: "draw 5s forwards 1s",
+            fill: "#4F959D",
+            opacity: 0,
+            animation: "slideIn 1s ease-out 0.5s forwards"
           }}
         >
           Invoice Management Made Easier
