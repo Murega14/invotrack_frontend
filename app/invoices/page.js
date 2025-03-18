@@ -14,7 +14,7 @@ export default function Invoices() {
   const [showDateFilter, setShowDateFilter] = useState(false);
 
   const statusOptions = ['all', 'pending', 'paid', 'cancelled', 'overdue'];
-  const apiBaseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const apiBaseUrl = process.env.NEXT_API_URL;
 
   useEffect(() => {
     const fetchInvoices = async () => {

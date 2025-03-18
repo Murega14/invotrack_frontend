@@ -13,7 +13,7 @@ export default function Signup() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_BASE_URL = process.env.NEXT_API_URL;
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

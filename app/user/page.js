@@ -17,7 +17,7 @@ export default function UserProfile() {
   const [updateMessage, setUpdateMessage] = useState('');
   const [showDeleteModal, setShowDeleteModal] = useState(false);
 
-  const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+  const API_BASE_URL = process.env.NEXT_API_URL;
 
   // Fetch user data on component mount
   useEffect(() => {
