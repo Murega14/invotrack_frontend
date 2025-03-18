@@ -101,7 +101,7 @@ export default function Invoices() {
   const formatCurrency = (amount) => {
     return new Intl.NumberFormat('en-US', {
       style: 'currency',
-      currency: 'USD'
+      currency: 'KSH'
     }).format(amount);
   };
 
