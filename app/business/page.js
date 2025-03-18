@@ -10,7 +10,7 @@ export default function BusinessList() {
   const [error, setError] = useState(null);
   const router = useRouter();
 
-  const apiBaseUrl = process.env.NEXT_API_URL;
+  const apiBaseUrl = "https://invotrack-2.onrender.com";
 
 
   useEffect(() => {

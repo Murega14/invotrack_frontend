@@ -14,7 +14,7 @@ export default function Invoices() {
   const [showDateFilter, setShowDateFilter] = useState(false);
 
   const statusOptions = ['all', 'pending', 'paid', 'cancelled', 'overdue'];
-  const apiBaseUrl = process.env.NEXT_API_URL;
+  const apiBaseUrl = "https://invotrack-2.onrender.com";
 
   useEffect(() => {
     const fetchInvoices = async () => {
