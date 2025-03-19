@@ -1,13 +1,17 @@
 "use client"
 import { useState, useEffect } from 'react';
-import { ArrowLeft, Filter, Calendar, ChevronDown, X } from 'lucide-react';
+import { ArrowLeft, Filter, Calendar, ChevronDown, X, Mail, Send } from 'lucide-react';
 import Link from 'next/link';
 import { format } from 'date-fns';
 
 export default function Invoices() {
-  const [invoices, setInvoices] = useState([]);
+  const [invoices, setInvoices] = useState({
+    received: [],
+    outgoing: []
+  });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [activeTab, setActiveTab] = useState('outgoing');
   const [statusFilter, setStatusFilter] = useState('all');
   const [dateFilter, setDateFilter] = useState(null);
   const [showStatusFilter, setShowStatusFilter] = useState(false);
@@ -28,14 +32,17 @@ export default function Invoices() {
         }
         
         // Base URL for fetching invoices
-        let url = `${apiBaseUrl}/api/v1/invoices`;
+        let outgoingUrl = `${apiBaseUrl}/api/v1/invoices`;
+        let receivedUrl = `${apiBaseUrl}/api/v1/invoices/received`;
         
         // If status filter is applied and not 'all'
         if (statusFilter && statusFilter !== 'all') {
-          url = `${apiBaseUrl}/api/v1/invoices/status/${statusFilter}`;
+          outgoingUrl = `${apiBaseUrl}/api/v1/invoices/status/${statusFilter}`;
+          receivedUrl = `${apiBaseUrl}/api/v1/invoices/received/status/${statusFilter}`;
         }
         
-        const response = await fetch(url, {
+        // Fetch outgoing invoices
+        const outgoingResponse = await fetch(outgoingUrl, {
           method: 'GET',
           headers: {
             'Authorization': `Bearer ${token}`,
@@ -44,38 +51,37 @@ export default function Invoices() {
           }
         });
         
-        if (response.status === 401) {
+        // Fetch received invoices
+        const receivedResponse = await fetch(receivedUrl, {
+          method: 'GET',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          }
+        });
+        
+        if (outgoingResponse.status === 401 || receivedResponse.status === 401) {
           // Handle unauthorized access
           throw new Error('Unauthorized access. Please log in again.');
         }
         
-        if (response.status === 422) {
-          // Handle validation errors
-          const errorData = await response.json();
-          throw new Error(`Validation error: ${errorData.message || 'Please check your request'}`);
-        }
-        
-        if (!response.ok) {
+        if (!outgoingResponse.ok || !receivedResponse.ok) {
           // Handle other errors
-          throw new Error(`Failed to fetch invoices: ${response.status}`);
+          throw new Error(`Failed to fetch invoices: ${outgoingResponse.status || receivedResponse.status}`);
         }
         
-        const data = await response.json();
+        const outgoingData = await outgoingResponse.json();
+        const receivedData = await receivedResponse.json();
         
-        if (data.success && Array.isArray(data.invoices)) {
-          setInvoices(data.invoices);
-        } else if (data.message && data.message.includes('no invoices found')) {
-          // Handle case where no invoices are found
-          setInvoices([]);
-        } else {
-          // Handle unexpected response format
-          console.error('Unexpected API response format:', data);
-          setInvoices([]);
-        }
+        setInvoices({
+          outgoing: outgoingData.success && Array.isArray(outgoingData.invoices) ? outgoingData.invoices : [],
+          received: receivedData.success && Array.isArray(receivedData.invoices) ? receivedData.invoices : []
+        });
       } catch (err) {
         console.error('Error fetching invoices:', err);
         setError(err.message);
-        setInvoices([]);
+        setInvoices({ outgoing: [], received: [] });
       } finally {
         setLoading(false);
       }
@@ -85,13 +91,22 @@ export default function Invoices() {
   }, [statusFilter, apiBaseUrl]); // Re-fetch when status filter changes
 
   // Apply date filter client-side
-  const filteredInvoices = dateFilter
-    ? invoices.filter(invoice => {
-        const invoiceDate = new Date(invoice.date_issued);
-        const filterDate = new Date(dateFilter);
-        return invoiceDate.toDateString() === filterDate.toDateString();
-      })
-    : invoices;
+  const filteredInvoices = {
+    outgoing: dateFilter
+      ? invoices.outgoing.filter(invoice => {
+          const invoiceDate = new Date(invoice.date_issued);
+          const filterDate = new Date(dateFilter);
+          return invoiceDate.toDateString() === filterDate.toDateString();
+        })
+      : invoices.outgoing,
+    received: dateFilter
+      ? invoices.received.filter(invoice => {
+          const invoiceDate = new Date(invoice.date_issued);
+          const filterDate = new Date(dateFilter);
+          return invoiceDate.toDateString() === filterDate.toDateString();
+        })
+      : invoices.received
+  };
 
   const clearFilters = () => {
     setStatusFilter('all');
@@ -143,6 +158,32 @@ export default function Invoices() {
 
       {/* Main Content */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Tabs */}
+        <div className="flex border-b border-gray-200 mb-6">
+          <button
+            onClick={() => setActiveTab('outgoing')}
+            className={`flex items-center px-6 py-3 text-sm font-medium rounded-t-lg ${
+              activeTab === 'outgoing'
+                ? 'bg-white text-[#205781] border-t border-l border-r border-gray-200'
+                : 'text-gray-500 hover:text-gray-700 bg-gray-100'
+            }`}
+          >
+            <Send size={18} className="mr-2" />
+            Outgoing Invoices
+          </button>
+          <button
+            onClick={() => setActiveTab('received')}
+            className={`flex items-center px-6 py-3 text-sm font-medium rounded-t-lg ${
+              activeTab === 'received'
+                ? 'bg-white text-[#205781] border-t border-l border-r border-gray-200'
+                : 'text-gray-500 hover:text-gray-700 bg-gray-100'
+            }`}
+          >
+            <Mail size={18} className="mr-2" />
+            Received Invoices
+          </button>
+        </div>
+
         {/* Filter Section */}
         <div className="mb-6 flex flex-wrap items-center justify-between gap-4">
           <div className="flex flex-wrap gap-3">
@@ -223,15 +264,17 @@ export default function Invoices() {
             )}
           </div>
           
-          <Link
-            href="/invoices/create"
-            className="bg-[#4F959D] hover:bg-[#205781] text-white rounded-md px-4 py-2 text-sm font-medium"
-          >
-            Create New Invoice
-          </Link>
+          {activeTab === 'outgoing' && (
+            <Link
+              href="/invoices/create"
+              className="bg-[#4F959D] hover:bg-[#205781] text-white rounded-md px-4 py-2 text-sm font-medium"
+            >
+              Create New Invoice
+            </Link>
+          )}
         </div>
 
-        {/* Invoices List */}
+        {/* Active Tab Content */}
         <div className="bg-white rounded-lg shadow overflow-hidden">
           {loading ? (
             <div className="p-8 text-center">
@@ -257,9 +300,9 @@ export default function Invoices() {
                 </button>
               )}
             </div>
-          ) : filteredInvoices.length === 0 ? (
+          ) : filteredInvoices[activeTab].length === 0 ? (
             <div className="p-8 text-center">
-              <p className="text-gray-500">No invoices found with the current filters.</p>
+              <p className="text-gray-500">No {activeTab} invoices found with the current filters.</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
@@ -270,7 +313,7 @@ export default function Invoices() {
                       Invoice Number
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#205781] uppercase tracking-wider">
-                      Recipient
+                      {activeTab === 'outgoing' ? 'Recipient' : 'Sender'}
                     </th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-[#205781] uppercase tracking-wider">
                       Amount
@@ -290,13 +333,13 @@ export default function Invoices() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredInvoices.map((invoice) => (
+                  {filteredInvoices[activeTab].map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-gray-50">
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-[#205781]">
                         {invoice.invoice_number}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                        {invoice.recipient || 'N/A'}
+                        {activeTab === 'outgoing' ? invoice.recipient : invoice.sender || 'N/A'}
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                         {formatCurrency(invoice.amount)}
@@ -319,12 +362,14 @@ export default function Invoices() {
                         >
                           View
                         </Link>
-                        <Link
-                          href={`/invoices/${invoice.id}/edit`}
-                          className="text-[#4F959D] hover:text-[#205781]"
-                        >
-                          Edit
-                        </Link>
+                        {activeTab === 'outgoing' && (
+                          <Link
+                            href={`/invoices/${invoice.id}/edit`}
+                            className="text-[#4F959D] hover:text-[#205781]"
+                          >
+                            Edit
+                          </Link>
+                        )}
                       </td>
                     </tr>
                   ))}

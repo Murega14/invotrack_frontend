@@ -6,6 +6,9 @@ module.exports = {
     ],
     theme: {
       extend: {
+        fontFamily: {
+          winky: ['var(--font-winky)'],
+        },
         animation: {
           typing: 'typing 2s steps(9) infinite, blink 0.75s step-end infinite'
         },
