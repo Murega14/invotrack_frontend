@@ -115,12 +115,20 @@ export default function UserProfile() {
   }
 
   return (
-    <div className="min-h-screen bg-[#F6F8D5] text-[#205781]">
+    <div className="min-h-screen bg-gradient-to-r from-[#F6F8D5] via-[#98D2C0] to-[#4F959D] animate-gradient-move text-[#205781]">
       <div className="container mx-auto px-4 py-12">
         <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-lg overflow-hidden">
-          <div className="bg-[#205781] text-white p-6">
-            <h1 className="text-2xl font-bold mb-2">User Profile</h1>
-            <p className="text-[#98D2C0]">Manage your account information</p>
+          <div className="bg-[#205781] text-white p-6 flex justify-between items-center">
+            <div>
+              <h1 className="text-2xl font-bold mb-2">User Profile</h1>
+              <p className="text-[#98D2C0]">Manage your account information</p>
+            </div>
+            <button 
+              onClick={() => router.push('/dashboard')}
+              className="bg-[#F6F8D5] hover:bg-[#98D2C0] text-[#205781] font-medium py-2 px-4 rounded transition duration-300"
+            >
+              Back to Dashboard
+            </button>
           </div>
           
           {error && (
@@ -236,41 +244,8 @@ export default function UserProfile() {
               </form>
             )}
           </div>
-          
-          <div className="p-6 bg-gray-50">
-            <h3 className="text-lg font-semibold mb-2">Account Info</h3>
-            <p className="text-gray-600">
-              ID: {user?.id}
-            </p>
-          </div>
         </div>
       </div>
-      
-      {/* Delete Account Modal */}
-      {showDeleteModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white rounded-lg p-6 max-w-md w-full">
-            <h3 className="text-xl font-bold text-[#205781] mb-4">Delete Account</h3>
-            <p className="text-gray-600 mb-6">
-              Are you sure you want to delete your account? This action cannot be undone.
-            </p>
-            <div className="flex justify-end space-x-4">
-              <button
-                onClick={() => setShowDeleteModal(false)}
-                className="bg-gray-200 hover:bg-gray-300 text-gray-800 font-medium py-2 px-4 rounded transition duration-300"
-              >
-                Cancel
-              </button>
-              <button
-                onClick={handleDeleteAccount}
-                className="bg-red-600 hover:bg-red-700 text-white font-medium py-2 px-4 rounded transition duration-300"
-              >
-                Delete Account
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
